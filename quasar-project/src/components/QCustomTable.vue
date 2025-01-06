@@ -45,7 +45,7 @@
       id: sortSelected,
     }
 
-    console.log("보낼 값22 => " ,sortSelected)
+    console.log("보낼 값22 => " ,selected.value[0].title)
     emit('deleteData', childData)
   }
   

@@ -99,7 +99,8 @@ const axiosApi = () => {
     .get('/posts')
     .then((response) => {
       data.value = response.data
-      console.log(response.data)
+      console.log("res.data", response.data)
+      console.log(data.value)
     })
     .catch((err) => {
       console.error(err)
