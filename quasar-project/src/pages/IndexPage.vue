@@ -1,160 +1,108 @@
 <template>
-  <div class="q-pa-md">
-    <q-table
-      flat bordered
-      title="Treats"
-      :rows="rows"
-      :columns="columns"
-      row-key="name"
-      :selected-rows-label="getSelectedString"
-      selection="multiple"
-      v-model:selected="selected"
-    />
+  <div>
+  <div>
+    <q-carousel animated v-model="slide" arrows navigation infinite style="height: 600px">
+      <q-carousel-slide :name="1" style="background-color: skyblue">
+        <table border="1px" align="center" style="background-color: white; width: 90%">
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>title</th>
+              <th>body</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in data" :key="user.id">
+              <td>{{ user.id }}</td>
+              <td>{{ user.title }}</td>
+              <td>{{ user.body }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+      </q-carousel-slide>
 
-    <div class="q-mt-md">
-      Selected: {{ JSON.stringify(selected) }}
-    </div>
+      <q-carousel-slide :name="2" style="background-color: skyblue" align="center">
+        <!-- 단일속성 값이 아닌 객체에는 약어 사용 불가능 -->
+        <Qtable v-bind="propsData" @deleteData="deleteUser" />
+      </q-carousel-slide>
+      <q-carousel-slide :name="3" style="background-color: skyblue">
+        <div align="center">
+          <br />
+          <input v-model="newUser.name" placeholder="name" /><br />
+          <input v-mode="newUser.title" placeholder="title" /> <br />
+          <input v-mode="newUser.body" placeholder="body" />
+          <br /><br />
+          <hr />
+          <q-btn color="primary" label="유저 등록" @click="axiosApiAdd" />
+        </div>
+      </q-carousel-slide>
+    </q-carousel>
   </div>
+  <div align="center">
+    <q-btn color="primary" label="유저 정보 출력" @click="axiosApi" />
+  </div>
+</div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
+import { api } from 'src/boot/axios'
+import Qtable from 'src/components/QCustomTable.vue'
 
-const columns = [
-  {
-    name: 'desc',
-    required: true,
-    label: 'Dessert (100g serving)',
-    align: 'left',
-    field: row => row.name,
-    format: val => `${val}`,
-    sortable: true
-  },
-  { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
-  { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-  { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-  { name: 'protein', label: 'Protein (g)', field: 'protein' },
-  { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-  { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-  { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
-]
+const deleteData = ref([])
 
-const rows = [
-  {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%'
-  },
-  {
-    name: 'Ice cream sandwich',
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    sodium: 129,
-    calcium: '8%',
-    iron: '1%'
-  },
-  {
-    name: 'Eclair',
-    calories: 262,
-    fat: 16.0,
-    carbs: 23,
-    protein: 6.0,
-    sodium: 337,
-    calcium: '6%',
-    iron: '7%'
-  },
-  {
-    name: 'Cupcake',
-    calories: 305,
-    fat: 3.7,
-    carbs: 67,
-    protein: 4.3,
-    sodium: 413,
-    calcium: '3%',
-    iron: '8%'
-  },
-  {
-    name: 'Gingerbread',
-    calories: 356,
-    fat: 16.0,
-    carbs: 49,
-    protein: 3.9,
-    sodium: 327,
-    calcium: '7%',
-    iron: '16%'
-  },
-  {
-    name: 'Jelly bean',
-    calories: 375,
-    fat: 0.0,
-    carbs: 94,
-    protein: 0.0,
-    sodium: 50,
-    calcium: '0%',
-    iron: '0%'
-  },
-  {
-    name: 'Lollipop',
-    calories: 392,
-    fat: 0.2,
-    carbs: 98,
-    protein: 0,
-    sodium: 38,
-    calcium: '0%',
-    iron: '2%'
-  },
-  {
-    name: 'Honeycomb',
-    calories: 408,
-    fat: 3.2,
-    carbs: 87,
-    protein: 6.5,
-    sodium: 562,
-    calcium: '0%',
-    iron: '45%'
-  },
-  {
-    name: 'Donut',
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    sodium: 326,
-    calcium: '2%',
-    iron: '22%'
-  },
-  {
-    name: 'KitKat',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: '12%',
-    iron: '6%'
-  }
-]
+const deleteUser = (res) => {
+  console.log('자식한테 받은 data==>', res.id)
+  deleteData.value = res.id
+  console.log(deleteData.value)
+  api
+    .delete('/posts/1')
+    .then((response) => {
+      console.log('제거?=>', response.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+}
+const newUser = ref([])
 
-export default {
-  setup () {
-    const selected = ref([])
+const data = ref([])
+const slide = ref(1)
 
-    return {
-      selected,
-      columns,
-      rows,
+const axiosApiAdd = () => {
+  api
+    .post('/posts', {
+      name: newUser.value.name,
+      username: newUser.value.username,
+      email: newUser.value.email,
+    })
+    .then((response) => {
+      console.log(response.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+}
+const pagination = ref({
+  page: 1,
+  rowsPerPage: 5,
+})
 
-      getSelectedString () {
-        return selected.value.length === 0 ? '' : `${selected.value.length} record${selected.value.length > 1 ? 's' : ''} selected of ${rows.length}`
-      }
-    }
-  }
+const propsData = ref({
+  data,
+  pagination,
+})
+
+const axiosApi = () => {
+  api
+    .get('/posts')
+    .then((response) => {
+      data.value = response.data
+      console.log(response.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
 }
 </script>
