@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 
 import Qtable from 'src/components/QCustomTable.vue';
-import { UserData } from 'src/composables/useUserState';
+import type { UserData } from 'src/composables/useUserState';
 
 import { data, newUser, fetchUsers, addUser, deleteUser } from 'src/composables/useUserState';
 
