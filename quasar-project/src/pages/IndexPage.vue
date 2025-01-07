@@ -1,10 +1,14 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useUserState } from 'src/composables/useUserState';
-import Qtable from 'src/components/QCustomTable.vue';
 
-// 상태 및 API 호출 로직 가져오기
-const { data, newUser, fetchUsers, addUser, deleteUser } = useUserState();
+
+import Qtable from 'src/components/QCustomTable.vue';
+import { UserData } from 'src/composables/useUserState';
+
+import { data, newUser, fetchUsers, addUser, deleteUser } from 'src/composables/useUserState';
+
+// eslint-disable-next-line
+const abc = ref<UserData[]>([])
 
 const slide = ref(1);
 const pagination = ref({
@@ -23,7 +27,8 @@ const handleDelete = (res: { value: { id: number }[] }) => {
   const idsToDelete = res.value.map((item) => item.id);
   deleteUser(idsToDelete);
 };
-
+// 처음에 한 번 조회
+fetchUsers()
 </script>
 
 <template>
@@ -84,7 +89,7 @@ const handleDelete = (res: { value: { id: number }[] }) => {
       </q-carousel>
     </div>
     <div align="center">
-      <q-btn color="primary" label="유저 정보 출력" @click="fetchUsers" />
-    </div>
+      <q-btn color="primary" label="유저 정보 갱신" @click="fetchUsers" />
+    </div>출
   </div>
 </template>

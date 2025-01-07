@@ -8,52 +8,44 @@ export type UserData = {
     email: string;
 };
 
-export function useUserState() {
-    const data = ref<UserData[]>([]);
-    const newUser = ref({ name: '', email: '' });
+// 사용자 상태 정의
+export const data = ref<UserData[]>([]);
+export const newUser = ref({ name: '', email: '' });
 
-    const fetchUsers = async () => {
-        try {
-            const response = await api.get<UserData[]>('/users');
-            data.value = response.data;
+// 사용자 데이터 조회
+export const fetchUsers = async () => {
+    try {
+        const response = await api.get<UserData[]>('/users');
+        data.value = response.data;
+    } catch (err) {
+        console.error('Error fetching users:', err);
+    }
+};
 
-        } catch (err) {
-            console.error('Error fetching users:', err);
+// 사용자 추가
+export const addUser = async () => {
+    try {
+        await api.post('/users', {
+            name: newUser.value.name,
+            email: newUser.value.email,
+        });
+        newUser.value.name = '';
+        newUser.value.email = '';
+        swal('유저 등록 성공!', '', 'success');
+    } catch (err) {
+        console.error('Error adding user:', err);
+        swal('유저 등록 실패!', '', 'warning');
+    }
+};
 
+// 사용자 삭제
+export const deleteUser = async (idsToDelete: number[]) => {
+    try {
+        for (const id of idsToDelete) {
+            await api.delete(`/users/${id}`);
         }
-    };
-
-    const addUser = async () => {
-        try {
-            await api.post('/users', {
-                name: newUser.value.name,
-                email: newUser.value.email,
-            });
-            newUser.value.name = '';
-            newUser.value.email = '';
-            swal('유저 등록 성공!', '', 'success')
-        } catch (err) {
-            console.error('Error adding user:', err);
-            swal('유저 등록 실패!', '', 'warning')
-        }
-    };
-
-    const deleteUser = async (idsToDelete: number[]) => {
-        try {
-            for (const id of idsToDelete) {
-                await api.delete(`/users/${id}`);
-            }
-            await fetchUsers();
-        } catch (err) {
-            console.error('Error deleting users:', err);
-        }
-    };
-
-    return {
-        data,       // 사용자 데이터 상태
-        newUser,    // 새 사용자 입력 필드
-        fetchUsers, // 사용자 데이터 조회
-        addUser,    // 사용자 추가
-        deleteUser, // 사용자 삭제
-    };
-}
+        await fetchUsers();
+    } catch (err) {
+        console.error('Error deleting users:', err);
+    }
+};
