@@ -1,23 +1,19 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="HHH Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-toolbar class="glossy">
+          <q-btn flat round dense icon="menu" class="q-mr-sm" @click="toggleLeftDrawer"/>
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+          <q-toolbar-title class="text-h4">Narui</q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
+          <q-btn dense color="purple" round icon="email" class="q-ml-md">
+            <q-badge color="red" floating>4</q-badge>
+          </q-btn>
+          <q-btn round icon="notifications">
+            <q-badge floating color="red" rounded />
+           </q-btn>
+        </q-toolbar>
+      </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"

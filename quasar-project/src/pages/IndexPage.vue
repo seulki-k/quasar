@@ -1,37 +1,36 @@
 <template>
   <div>
-  <div>
-    <q-carousel animated v-model="slide" arrows navigation infinite style="height: 600px">
-      <q-carousel-slide :name="1" style="background-color: skyblue">
+  <div style="height:90vh">
+    <q-carousel animated v-model="slide" arrows navigation infinite style="height: 100%">
+      <q-carousel-slide :name="1" img-src="https://cdn.quasar.dev/img/mountains.jpg">
         <table border="1px" align="center" style="background-color: white; width: 90%">
           <thead>
             <tr>
               <th>id</th>
-              <th>title</th>
-              <th>body</th>
+              <th>name</th>
+              <th>email</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="user in data" :key="user.id">
               <td>{{ user.id }}</td>
-              <td>{{ user.title }}</td>
-              <td>{{ user.body }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
             </tr>
           </tbody>
         </table>
         <br />
       </q-carousel-slide>
 
-      <q-carousel-slide :name="2" style="background-color: skyblue" align="center">
+      <q-carousel-slide :name="2" img-src="https://cdn.quasar.dev/img/parallax1.jpg" align="center">
         <!-- 단일속성 값이 아닌 객체에는 약어 사용 불가능 -->
         <Qtable v-bind="propsData" @deleteData="deleteUser" />
       </q-carousel-slide>
-      <q-carousel-slide :name="3" style="background-color: skyblue">
+      <q-carousel-slide :name="3"  img-src="https://cdn.quasar.dev/img/quasar.jpg">
         <div align="center">
           <br />
           <input v-model="newUser.name" placeholder="name" /><br />
-          <input v-mode="newUser.title" placeholder="title" /> <br />
-          <input v-mode="newUser.body" placeholder="body" />
+          <input v-model="newUser.email" placeholder="email" />
           <br /><br />
           <hr />
           <q-btn color="primary" label="유저 등록" @click="axiosApiAdd" />
@@ -50,39 +49,48 @@ import { ref } from 'vue'
 import { api } from 'src/boot/axios'
 import Qtable from 'src/components/QCustomTable.vue'
 
-const deleteData = ref([])
 
 const deleteUser = (res) => {
-  console.log('자식한테 받은 data==>', res.id)
-  deleteData.value = res.id
-  console.log(deleteData.value)
-  api
-    .delete('/posts/1')
-    .then((response) => {
-      console.log('제거?=>', response.data)
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+  // 받은 데이터의 id 배열 설정
+  const idsToDelete = res.value.map(item => item.id);
+  console.log('삭제할 데이터 ID 목록: ', idsToDelete);
+
+  // 여러 개의 id에 대해 순차적으로 삭제 요청 보내기
+  idsToDelete.forEach((id) => {
+    api
+      .delete(`/users/${id}`)
+      .then((response) => {
+        console.log(`ID ${id} 제거?=>`, response.data)
+      })
+      .catch((err) => {
+        console.error(`ID ${id} 삭제 실패: `, err)
+      });
+  });
 }
 const newUser = ref([])
 
 const data = ref([])
 const slide = ref(1)
 
+
+
 const axiosApiAdd = () => {
   api
-    .post('/posts', {
+    .post('/users', {
       name: newUser.value.name,
-      username: newUser.value.username,
       email: newUser.value.email,
     })
     .then((response) => {
-      console.log(response.data)
+      console.log("등록완료 = ", response.data)
+      console.log("name = ", newUser.value.name)
+      console.log("email = ",newUser.value.email)
     })
     .catch((err) => {
       console.error(err)
     })
+
+    newUser.value.name = "";
+    newUser.value.email = "";
 }
 const pagination = ref({
   page: 1,
@@ -96,7 +104,7 @@ const propsData = ref({
 
 const axiosApi = () => {
   api
-    .get('/posts')
+    .get('/users')
     .then((response) => {
       data.value = response.data
       console.log("res.data", response.data)
