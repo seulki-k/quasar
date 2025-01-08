@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    // JavaScript 파일을 TypeScript 프로젝트에 포함할 수 있도록 허용
+    "allowJs" : true,
+    // JavaScript 파일에 대해서도 타입 검사를 진행
+    "checkJs" : true,
+    // TypeScript의 엄격한 타입 검사 모드를 활성화
+    "strict": true,
+    // 타입을 명시하지 않은 변수에 any 타입을 자동으로 할당하지 않도록 설정
+    "noImplicitAny": true,
+    // 선택적 속성의 타입을 더 정확하게 처리
+    "exactOptionalPropertyTypes": true
+  },
+  "include": ["src/**/*"],
+  "extends": "./.quasar/tsconfig.json"
+}

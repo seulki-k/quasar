@@ -1,34 +1,44 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 
+import Qtable from 'src/components/QCustomTable.vue'
+import type { UserData, addUserData } from 'src/composables/useUserState'
 
-import Qtable from 'src/components/QCustomTable.vue';
-import type { UserData } from 'src/composables/useUserState';
+import { data, newUser, fetchUsers, addUser, deleteUser } from 'src/composables/useUserState'
 
-import { data, newUser, fetchUsers, addUser, deleteUser } from 'src/composables/useUserState';
-
+// useUserState에서 생성한 UserData 을 제네릭을 사용하여 타입 정의
 // eslint-disable-next-line
 const abc = ref<UserData[]>([])
+// eslint-disable-next-line
+const def = ref<addUserData[]>([])
 
-const slide = ref(1);
+const slide = ref(1)
 const pagination = ref({
   page: 1,
   rowsPerPage: 5,
-});
+})
 
 const handleKeyDown = (e: KeyboardEvent) => {
   if (e.key >= '0' && e.key <= '9') {
-    alert('이름에 숫자는 입력 불가능합니다.');
-    e.preventDefault();
+    alert('이름에 숫자는 입력 불가능합니다.')
+    e.preventDefault()
   }
-};
-
+}
+// res : value[] 속성 존재해야 한다. , id : number - 숫자 타입 지정
+// ex)  res = { value[ id: 1]}
 const handleDelete = (res: { value: { id: number }[] }) => {
-  const idsToDelete = res.value.map((item) => item.id);
-  deleteUser(idsToDelete);
-};
-// 처음에 한 번 조회
-fetchUsers()
+  // idsToDelete는 배열이다.
+  const idsToDelete = res.value.map((item) => item.id)
+  deleteUser(idsToDelete)
+}
+// 처음에 한 번 조회, data 객체로  값 반환
+const test = async () => {
+  await fetchUsers()
+  data.value.forEach((UsersData) => {
+    console.log('호출 =>', UsersData)
+  })
+}
+test()
 </script>
 
 <template>
@@ -42,11 +52,7 @@ fetchUsers()
         >
           <div align="center">
             <br />
-            <input
-              v-model="newUser.name"
-              placeholder="name"
-              @keydown="handleKeyDown"
-            /><br />
+            <input v-model="newUser.name" placeholder="name" @keydown="handleKeyDown" /><br />
             <input v-model="newUser.email" placeholder="email" />
             <br /><br />
             <hr />
@@ -90,6 +96,7 @@ fetchUsers()
     </div>
     <div align="center">
       <q-btn color="primary" label="유저 정보 갱신" @click="fetchUsers" />
-    </div>출
+    </div>
+    출
   </div>
 </template>
