@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import {  ref } from 'vue'
 import { updateUser,updateUserData } from 'src/composables/useUserState';
+import swal from 'sweetalert'
 
 const selected = ref([])
 // computed 속성은 Vue.js에서 반응형 데이터를 계산된 값으로 제공하기 위한 기능
@@ -33,6 +34,19 @@ const columns = [
   { name: 'name', label: 'Name', align: 'left', field: 'name' },
   { name: 'email', label: 'Email', align: 'left', field: 'email' },
 ]
+
+
+// 선택된 유저가 여러 명일 때 경고 창 띄우는 함수
+const handleUpdateUser = () => {
+  if (selected.value.length !== 1) {
+    // 선택된 유저가 2명 이상이면 경고창 띄우기
+    swal('한 명의 유저를 선택해야 합니다.','' ,'warning');
+    return; // 추가 작업을 하지 않음
+  }
+  updateUserData.value.id = selected.value[0].id
+  // selected.length가 1일 때만 유저 업데이트 함수 호출
+  updateUser()
+}
 </script>
 
 <template>
@@ -59,7 +73,7 @@ const columns = [
     <input v-model="updateUserData.email" id="email" placeholder="홍길동@naver.com" type="text">
     </p>
 
-    <q-btn color="pink" @click="updateUser">선택된 유저 변경</q-btn>
+    <q-btn color="pink" @click="handleUpdateUser">선택된 유저 변경</q-btn>
     <hr>
     <q-btn color="pink" @click="deleteUser">선택된 유저 삭제</q-btn>
   </div>
