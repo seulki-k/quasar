@@ -41,11 +41,21 @@ const handleUpdateUser = () => {
   if (selected.value.length !== 1) {
     // 선택된 유저가 2명 이상이면 경고창 띄우기
     swal('한 명의 유저를 선택해야 합니다.','' ,'warning');
+    updateUserData.value = {
+  id: null,
+  name: '',
+  email: ''
+};
     return; // 추가 작업을 하지 않음
   }
   updateUserData.value.id = selected.value[0].id
   // selected.length가 1일 때만 유저 업데이트 함수 호출
   updateUser()
+  updateUserData.value = {
+  id: null,
+  name: '',
+  email: ''
+};
 }
 </script>
 
