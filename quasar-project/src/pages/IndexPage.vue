@@ -3,6 +3,8 @@ import { ref } from 'vue'
 
 import Qtable from 'src/components/QCustomTable.vue'
 import type { UserData, addUserData } from 'src/composables/useUserState'
+ // data, newUser 등은 useUserState랑 연동되어 있다.
+ // import 받지 않고 import한 UserData 등의 값을 사용하여 const data = ref<UserData[]>() 선언하면 동작하지 않는다.
 import { data, newUser, fetchUsers, addUser, deleteUser } from 'src/composables/useUserState'
 import swal from 'sweetalert'
 
