@@ -42,11 +42,13 @@ const handleUpdateUser = () => {
   if (selectedData.value.length !== 1) {
     // 선택된 유저가 2명 이상이면 경고창 띄우기
     swal('한 명의 유저를 선택해야 합니다.','' ,'warning');
+    // 업데이트를 위하여 90, 94번 째 줄에서 v-modl 값 초기화
     updateUserData.value = {
       id: 0,
       name: '',
       email: ''
     };
+    // 업데이트 완료 후 체크 항목 초기화
     selectedData.value = []
     return; // 추가 작업을 하지 않음
   }
@@ -58,6 +60,12 @@ const handleUpdateUser = () => {
   name: '',
   email: ''
 };
+}
+const handleKeyDown = (e: KeyboardEvent) => {
+  if (e.key >= '0' && e.key <= '9') {
+    alert('이름에 숫자는 입력 불가능합니다.')
+    e.preventDefault()
+  }
 }
 </script>
 
@@ -79,7 +87,7 @@ const handleUpdateUser = () => {
     <hr>
     <p>
       <label for="name" style="color:blue;"><b>이름 : </b></label>
-      <input v-model="updateUserData.name" id="name" placeholder="홍길동" type="text">
+      <input v-model="updateUserData.name" id="name" placeholder="홍길동" type="text" @keydown="handleKeyDown">
     </p>
     <p>
     <label for="email" style="color: blue;"><strong>  이메일 : </strong></label>
