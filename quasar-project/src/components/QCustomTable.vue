@@ -8,6 +8,7 @@ const selectedData = ref([])
 // computed 속성은 Vue.js에서 반응형 데이터를 계산된 값으로 제공하기 위한 기능
 
 // 부모로부터 props 값 받아오기
+// IndexPage.vue 73번째 줄에서 호출
 const { data, pagination } = defineProps({
   data: {
     type: Array,
@@ -21,6 +22,7 @@ const { data, pagination } = defineProps({
 
 const emit = defineEmits([])
 
+// // IndexPage.vue 73번째 값 전달
 const deleteUserData = () => {
   console.log("삭제 시 보낸 값", selectedData.value)
   emit('deleteData', selectedData)

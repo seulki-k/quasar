@@ -41,14 +41,8 @@ const handleDelete = (res: { value: { id: number }[] }) => {
   }
 
 }
-// 처음에 한 번 조회, data 객체로  값 반환
-const test = async () => {
-  await fetchUsers()
-  data.value.forEach((UsersData) => {
-    console.log('호출 =>', UsersData)
-  })
-}
-test()
+// 처음 페이지 리디렉션될 때 유저 정보 갱신
+fetchUsers()
 </script>
 
 <template>
@@ -76,6 +70,7 @@ test()
           align="center"
           @click.left.shift="slide = 3"
         >
+        <!-- data 값은 처음 45번째 줄에서 fetchUsers() 호출되며 값을 갖고 온다.-->
           <Qtable :data="data" :pagination="pagination" @deleteData="handleDelete" />
         </q-carousel-slide>
 
@@ -93,6 +88,7 @@ test()
               </tr>
             </thead>
             <tbody>
+              <!-- v-for 문 사용하여 data배열의 객체들을 user에 저장하여 출력 구분자 key는 id-->
               <tr v-for="user in data" :key="user.id">
                 <td>{{ user.id }}</td>
                 <td>{{ user.name }}</td>
