@@ -3,8 +3,8 @@ import { ref } from 'vue'
 
 import Qtable from 'src/components/QCustomTable.vue'
 import type { UserData, addUserData } from 'src/composables/useUserState'
-
 import { data, newUser, fetchUsers, addUser, deleteUser } from 'src/composables/useUserState'
+import swal from 'sweetalert'
 
 // useUserState에서 생성한 UserData 을 제네릭을 사용하여 타입 정의
 // eslint-disable-next-line
@@ -25,11 +25,19 @@ const handleKeyDown = (e: KeyboardEvent) => {
   }
 }
 // res : value[] 속성 존재해야 한다. , id : number - 숫자 타입 지정
-// ex)  res = { value[ id: 1]}
+// 들어온 값 ex) {id: 74, name: 'Lee Hyunwoo', email: 'hyunwoo.lee@example.com'}
+// 끊어서 해석 vlaue : {id : number} =>  value는 id:number 타입의 값을 갖는다.
+// value[] 배열이다. => res.value는 id는 number 타입을 갖는 배열이다.
 const handleDelete = (res: { value: { id: number }[] }) => {
   // idsToDelete는 배열이다.
+  // res.value에서 id 값을 추출하여 배열로 생성.
   const idsToDelete = res.value.map((item) => item.id)
-  deleteUser(idsToDelete)
+  if(idsToDelete.length < 1){
+    swal("선택된 유저가 없습니다.",'','error')
+  }else{
+    deleteUser(idsToDelete)
+  }
+
 }
 // 처음에 한 번 조회, data 객체로  값 반환
 const test = async () => {

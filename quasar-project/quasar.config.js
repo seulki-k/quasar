@@ -73,7 +73,18 @@ export default defineConfig((/* ctx */) => {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver
     devServer: {
       // https: true,
-      open: true // opens browser window automatically
+      open: true, // opens browser window automatically
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8080',  // 백엔드 서버 URL
+          changeOrigin: true,               // CORS 문제 해결
+          // pathRewrite 이게 동작을 안하는데???? 어디가 잘못된 거지?
+          pathRewrite: {
+            // ^ => 시작하는 경로 , /api/users => /kakaka/users, /kaka/api => /kaka/api
+            '^/api': '/kaka',  // 프록시 경로에서 '/api'를 '/apw'로 변경
+          },
+        },
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
