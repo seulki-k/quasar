@@ -7,7 +7,7 @@ export interface UserData  {
   name: string
   email: string
 }
-export type addUserData = {
+export type AddUserData = {
   name: string
   email: string
 }
@@ -25,7 +25,7 @@ export type addUserData = {
 export const data = ref<UserData[]>([])
 
 // 사용자 등록 정의 - id는  auto_increment 속성 부여하여 등록할 떄 필요X
-export const newUser = ref<addUserData>({ name: '', email: '' })
+export const newUser = ref<AddUserData>({ name: '', email: '' })
 export const updateUserData = ref<UserData>({id: 0 , name: '', email: '' })
 
 // 사용자 데이터 조회
