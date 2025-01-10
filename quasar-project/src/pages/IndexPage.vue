@@ -57,7 +57,7 @@ fetchUsers()
           <div align="center">
             <br />
             <input v-model="newUser.name" placeholder="name" @keydown="handleKeyDown" /><br />
-            <input v-model="newUser.email" placeholder="email" />
+            <input v-model="newUser.email" type="email" placeholder="email" required/>
             <br /><br />
             <hr />
             <q-btn color="primary" label="유저 등록" @click="addUser" />

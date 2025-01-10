@@ -91,7 +91,7 @@ const handleKeyDown = (e: KeyboardEvent) => {
     </p>
     <p>
     <label for="email" style="color: blue;"><strong>  이메일 : </strong></label>
-    <input v-model="updateUserData.email" id="email" placeholder="홍길동@naver.com" type="text">
+    <input v-model="updateUserData.email" id="email" placeholder="홍길동@naver.com" type="email">
     </p>
 
     <q-btn color="pink" @click="handleUpdateUser">선택된 유저 변경</q-btn>
