@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { api } from 'src/boot/axios'
 import swal from 'sweetalert'
+import { Warning } from 'postcss'
 
 export interface UserData  {
   id: number
@@ -39,6 +40,11 @@ export const fetchUsers = async () => {
 }
 // 사용자 추가
 export const addUser = async () => {
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailPattern.test(newUser.value.email)) {
+        swal('올바른 이메일 주소를 입력해주세요.','','warning');
+        return;
+      }
     await api.post('/users', {
       name: newUser.value.name,
       email: newUser.value.email,
@@ -55,7 +61,11 @@ export const addUser = async () => {
 }
 // 사용자 변경
 export const updateUser = async() =>{
-
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailPattern.test(updateUserData.value.email)) {
+    swal('올바른 이메일 주소를 입력해주세요.','','warning');
+    return;
+  }
     await api.put('/users',{
       id : updateUserData.value.id,
       name: updateUserData.value.name,
