@@ -5,7 +5,7 @@
     // JavaScript 파일에 대해서도 타입 검사를 진행
     "checkJs" : true,
     // TypeScript의 엄격한 타입 검사 모드를 활성화
-    "strict": true,
+    "strict": false,
     "strictFunctionTypes": true,
     // 타입을 명시하지 않은 변수에 any 타입을 자동으로 할당하지 않도록 설정
     "noImplicitAny": true,

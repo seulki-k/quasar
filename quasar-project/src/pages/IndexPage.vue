@@ -2,15 +2,13 @@
 import { ref } from 'vue'
 
 import Qtable from 'src/components/QCustomTable.vue'
-import type { UserData, AddUserData } from 'src/composables/useUserState'
- // data, newUser 등은 useUserState랑 연동되어 있다.
- // import 받지 않고 import한 UserData 등의 값을 사용하여 const data = ref<UserData[]>() 선언하면 동작하지 않는다.
+import type { AddUserData } from 'src/composables/useUserState'
 import { data, newUser, fetchUsers, addUser, deleteUser } from 'src/composables/useUserState'
 import swal from 'sweetalert'
 
-// useUserState에서 생성한 UserData 을 제네릭을 사용하여 타입 정의
-// eslint-disable-next-line
-const abc = ref<UserData[]>([])
+import {getAllUsers} from 'src/api/userApi'
+
+ 
 // eslint-disable-next-line
 const def = ref<AddUserData[]>([])
 
@@ -26,23 +24,17 @@ const handleKeyDown = (e: KeyboardEvent) => {
     e.preventDefault()
   }
 }
-// res : value[] 속성 존재해야 한다. , id : number - 숫자 타입 지정
-// 들어온 값 ex) {id: 74, name: 'Lee Hyunwoo', email: 'hyunwoo.lee@example.com'}
-// 끊어서 해석 vlaue : {id : number} =>  value는 id:number 타입의 값을 갖는다.
-// value[] 배열이다. => res.value는 id는 number 타입을 갖는 배열이다.
+
 const handleDelete = (res: { value: { id: number }[] }) => {
-  // idsToDelete는 배열이다.
-  // res.value에서 id 값을 추출하여 배열로 생성.
+
   const idsToDelete = res.value.map((item) => item.id)
   if(idsToDelete.length < 1){
     swal("선택된 유저가 없습니다.",'','error')
   }else{
     deleteUser(idsToDelete)
   }
-
 }
-// 처음 페이지 리디렉션될 때 유저 정보 갱신
-fetchUsers()
+ getAllUsers()
 </script>
 
 <template>
@@ -55,6 +47,7 @@ fetchUsers()
           @click.left.shift="slide = 2"
         >
           <div align="center">
+            
             <br />
             <input v-model="newUser.name" placeholder="name" @keydown="handleKeyDown" /><br />
             <input v-model="newUser.email" type="email" placeholder="email" required/>
@@ -70,7 +63,6 @@ fetchUsers()
           align="center"
           @click.left.shift="slide = 3"
         >
-        <!-- data 값은 처음 45번째 줄에서 fetchUsers() 호출되며 값을 갖고 온다.-->
           <Qtable :data="data" :pagination="pagination" @deleteData="handleDelete" />
         </q-carousel-slide>
 
@@ -88,7 +80,6 @@ fetchUsers()
               </tr>
             </thead>
             <tbody>
-              <!-- v-for 문 사용하여 data배열의 객체들을 user에 저장하여 출력 구분자 key는 id-->
               <tr v-for="user in data" :key="user.id">
                 <td>{{ user.id }}</td>
                 <td>{{ user.name }}</td>
